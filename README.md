@@ -1,6 +1,6 @@
 <p align="center"><img src="logo.png" alt="D4Launcher logo"/></p>
 
-# D4Launcher
+# [D4Launcher](https://github.com/EvilToasterDBU/D4Launcher)
 
 [![Badge_Download]][Download_GitHub]
 
