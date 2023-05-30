@@ -2,7 +2,7 @@
 
 # [D4Launcher](https://github.com/EvilToasterDBU/D4Launcher)
 
-[![Badge_Download]][Download_GitHub]
+[![Badge_Download]][Download_GitHub] [![Badge_Version]][Version]
 
 <b>D4Launcher</b> это программа для владельцев Diablo IV из России и Беларуси, что каким-либо образом получили игру на свой аккаунт.<br>
 Позволяет устанавливать, обновлять и чинить (проверкой файлов) и запускать игру с комфортом.<br>
@@ -32,7 +32,9 @@
 <!----------------------------------------------------------------------------->
 
 [Download_GitHub]: https://github.com/EvilToasterDBU/D4Launcher/releases/latest/download/D4Launcher.zip
+[Version]: https://github.com/EvilToasterDBU/D4Launcher/releases/latest
 
 <!---------------------------------{ Badges }---------------------------------->
 
 [Badge_Download]: https://img.shields.io/github/downloads/EvilToasterDBU/D4Launcher/total?color=green&label=Скачать&logo=windows&style=for-the-badge
+[Badge_Version]: https://img.shields.io/github/v/release/EvilToasterDBU/D4Launcher?label=последняя%20версия&logo=github&style=for-the-badge
