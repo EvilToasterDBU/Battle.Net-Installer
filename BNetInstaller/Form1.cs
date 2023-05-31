@@ -42,7 +42,7 @@ namespace BNetInstaller
         {
             string repositoryOwner = "EvilToasterDBU";
             string repositoryName = "D4Launcher";
-            string currentVersion = "1.0.0"; // Замените на текущую версию вашего приложения
+            string currentVersion = "1.0.1"; // Замените на текущую версию вашего приложения
             this.Text = repositoryName + " " + currentVersion;
 
 
@@ -78,7 +78,7 @@ namespace BNetInstaller
 
             checkBox_store_password.Checked = Properties.Settings.Default.CheckBox1State;
             string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory + "\\";
+            string dir = currentDirectory;
             string filePath = dir + ".build.info";
             string lastVersion = GetLastVersionFromBuildInfo(filePath);
             string url = "http://eu.patch.battle.net:1119/" + product + "/versions";
@@ -190,8 +190,8 @@ namespace BNetInstaller
         private void button_play_Click(object sender, EventArgs e)
         {
             string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory + "\\";
-            string pathToExecutable = dir + "Diablo VI.exe";
+            string dir = currentDirectory;
+            string pathToExecutable = dir + "Diablo IV.exe";
             string parameter1 = "-launch";
             string parameter2 = "";
             if (checkBox_store_password.Checked)
@@ -317,7 +317,7 @@ namespace BNetInstaller
         async Task Run()
         {
             string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory + "\\";
+            string dir = currentDirectory;
             using AgentApp app = new();
 
             var mode = isRepair ? Mode.Repair : Mode.Install;
@@ -459,7 +459,7 @@ namespace BNetInstaller
         private async Task afterUpdateFunctions()
         {
             string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory + "\\";
+            string dir = currentDirectory;
             progressbar.Visible = false;
             taskbarManager.SetProgressState(TaskbarProgressBarState.NoProgress);
             statusLabel.Text = "Готово";
