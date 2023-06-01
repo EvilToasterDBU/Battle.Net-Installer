@@ -25,11 +25,19 @@ internal class AgentEndpoint : BaseEndpoint
     protected override void ValidateResponse(JToken response, string content)
     {
         var token = response.Value<string>("authorization");
+        var version = response.Value<string>("opt_in_feedback");
+        var session = response.Value<string>("session");
+        var user_id = response.Value<string>("user_id");
+        var user_name = response.Value<string>("user_name");
+        var region = response.Value<string>("region");
+        var state = response.Value<string>("state");
+        var type = response.Value<string>("type");
+        var opt_in_feedback = response.Value<string>("version");
 
         if (string.IsNullOrEmpty(token))
             throw new Exception("Agent Error: Unable to authenticate.", new(content));
 
-        Requester.SetAuthorization(token);
+        Requester.SetAuthorization(token, opt_in_feedback, session, user_id, user_name, region, state, type, version);
         base.ValidateResponse(response, content);
     }
 }

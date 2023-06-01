@@ -60,7 +60,7 @@ namespace BNetInstaller
             button_play.Size = new Size(135, 50);
             button_play.TabIndex = 0;
             button_play.Text = "Играть";
-            button_play.Click += button_play_Click;
+            button_play.Click += button_play_ClickAsync;
             // 
             // checkBox_store_password
             // 

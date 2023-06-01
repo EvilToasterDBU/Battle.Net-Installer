@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BNetInstaller.Constants;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using static System.Windows.Forms.AxHost;
 
 namespace BNetInstaller;
 
@@ -31,9 +33,17 @@ internal class Requester : IDisposable
         };
     }
 
-    public void SetAuthorization(string authorization)
+    public void SetAuthorization(string authorization, string session,string opt_in_feedback, string user_id, string user_name, string region, string state, string type, string version)
     {
         _client.DefaultRequestHeaders.Add("Authorization", authorization);
+        _client.DefaultRequestHeaders.Add("Opt_in_feedback", opt_in_feedback);
+        _client.DefaultRequestHeaders.Add("Session", session);
+        _client.DefaultRequestHeaders.Add("User_id", user_id);
+        _client.DefaultRequestHeaders.Add("User_name", user_name);
+        _client.DefaultRequestHeaders.Add("Region", region);
+        _client.DefaultRequestHeaders.Add("State", state);
+        _client.DefaultRequestHeaders.Add("Type", type);
+        _client.DefaultRequestHeaders.Add("Version", version);
     }
 
     public async Task<HttpResponseMessage> SendAsync(string endpoint, HttpVerb verb, string content = null)

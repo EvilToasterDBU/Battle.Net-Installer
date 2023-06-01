@@ -19,6 +19,7 @@ internal class AgentApp : IDisposable
     public readonly RepairEndpoint RepairEndpoint;
     public readonly GameEndpoint GameEndpoint;
     public readonly VersionEndpoint VersionEndpoint;
+    public readonly GameSessionEndpoint GameSessionEndpoint;
 
     private readonly string AgentPath;
     private readonly int Port = 5050;
@@ -42,6 +43,7 @@ internal class AgentApp : IDisposable
         RepairEndpoint = new(Requester);
         GameEndpoint = new(Requester);
         VersionEndpoint = new(Requester);
+        GameSessionEndpoint = new(Requester);
     }
 
     private bool StartProcess()

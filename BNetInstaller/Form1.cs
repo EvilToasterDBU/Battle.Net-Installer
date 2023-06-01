@@ -17,7 +17,7 @@ namespace BNetInstaller
 {
     public partial class Form1 : Form
     {
-
+        string dir = "D:\\Games\\Diablo IV\\";
         string product = "fenris";
         string uid = "fenris";
         string locale = "";
@@ -77,8 +77,8 @@ namespace BNetInstaller
             }
 
             checkBox_store_password.Checked = Properties.Settings.Default.CheckBox1State;
-            string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory;
+            //string currentDirectory = Application.StartupPath;
+            //string dir = currentDirectory;
             string filePath = dir + ".build.info";
             string lastVersion = GetLastVersionFromBuildInfo(filePath);
             string url = "http://eu.patch.battle.net:1119/" + product + "/versions";
@@ -187,25 +187,35 @@ namespace BNetInstaller
             return lastVersion;
         }
 
-        private void button_play_Click(object sender, EventArgs e)
+        private async void button_play_ClickAsync(object sender, EventArgs e)
         {
-            string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory;
-            string pathToExecutable = dir + "Diablo IV.exe";
-            string parameter1 = "-launch";
-            string parameter2 = "";
-            if (checkBox_store_password.Checked)
-            {
-                parameter2 = "-sso";
-            }
+            //// Проверяем, запущена ли программа Battle.net.exe
+            //Process[] processes = Process.GetProcessesByName("Battle.net");
+            //if (processes.Length > 0)
+            //{
+                // Программа запущена, выполняем обновление
+                await RunGame();
+            //}
+            //else
+            //{
+            //    // Программа не запущена
+            //    statusLabel.Text = "Сначала запустите Battle.net";
+            //    System.Media.SystemSounds.Hand.Play(); // Воспроизвести звук ошибки
+            //}
+        }
 
-            Process process = new Process();
-            process.StartInfo.FileName = pathToExecutable;
-            process.StartInfo.Arguments = parameter1 + " " + parameter2;
+        async Task RunGame()
+        {
+            using AgentApp app = new();
 
-            process.Start();
-            // Завершение выполнения программы
-            Application.Exit();
+            //Console.WriteLine("Authenticating");
+            //statusLabel.Text = "Аутентификация...";
+            await app.AgentEndpoint.Get();
+
+            app.GameSessionEndpoint.Model.binary_type = "game";
+            //app.GameSessionEndpoint.Model.pid = "34868";
+            app.GameSessionEndpoint.Model.uid = uid;
+            await app.GameSessionEndpoint.Post();
         }
 
         private async void button_update_ClickAsync(object sender, EventArgs e)
@@ -316,8 +326,8 @@ namespace BNetInstaller
 
         async Task Run()
         {
-            string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory;
+            //string currentDirectory = Application.StartupPath;
+            //string dir = currentDirectory;
             using AgentApp app = new();
 
             var mode = isRepair ? Mode.Repair : Mode.Install;
@@ -458,8 +468,8 @@ namespace BNetInstaller
 
         private async Task afterUpdateFunctions()
         {
-            string currentDirectory = Application.StartupPath;
-            string dir = currentDirectory;
+            //string currentDirectory = Application.StartupPath;
+            //string dir = currentDirectory;
             progressbar.Visible = false;
             taskbarManager.SetProgressState(TaskbarProgressBarState.NoProgress);
             statusLabel.Text = "Готово";
