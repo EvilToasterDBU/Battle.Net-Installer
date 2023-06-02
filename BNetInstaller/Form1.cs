@@ -17,9 +17,9 @@ namespace BNetInstaller
 {
     public partial class Form1 : Form
     {
-        string dir = "D:\\Games\\Diablo IV\\";
-        string product = "fenris";
-        string uid = "fenris";
+        string dir = "D:\\Games\\Diablo II Resurrected\\";
+        string product = "osi";
+        string uid = "osi";
         string locale = "";
         bool isRepair = false;
         Image lang_en = Properties.Resources.lang_en;
@@ -210,10 +210,11 @@ namespace BNetInstaller
 
             //Console.WriteLine("Authenticating");
             //statusLabel.Text = "Аутентификация...";
+
             await app.AgentEndpoint.Get();
 
             app.GameSessionEndpoint.Model.binary_type = "game";
-            //app.GameSessionEndpoint.Model.pid = "34868";
+            app.GameSessionEndpoint.Model.pid = 3782;
             app.GameSessionEndpoint.Model.uid = uid;
             await app.GameSessionEndpoint.Post();
         }
