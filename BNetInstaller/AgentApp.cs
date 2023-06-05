@@ -8,6 +8,8 @@ using BNetInstaller.Endpoints.Install;
 using BNetInstaller.Endpoints.Repair;
 using BNetInstaller.Endpoints.Update;
 using BNetInstaller.Endpoints.Version;
+using BNetInstaller.Endpoints.GameSession;
+
 
 namespace BNetInstaller;
 

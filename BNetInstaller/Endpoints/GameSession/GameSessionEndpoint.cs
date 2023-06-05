@@ -3,13 +3,11 @@ using BNetInstaller.Constants;
 using BNetInstaller.Models;
 using Newtonsoft.Json.Linq;
 
-namespace BNetInstaller.Endpoints.Version;
+namespace BNetInstaller.Endpoints.GameSession;
 
 internal class GameSessionEndpoint : BaseEndpoint
 {
     public GameSessionModel Model { get; }
-    public GameSessionEndpoint Uid { get; private set; }
-
     public GameSessionEndpoint(Requester requester) : base("gamesession", requester)
     {
         Model = new();

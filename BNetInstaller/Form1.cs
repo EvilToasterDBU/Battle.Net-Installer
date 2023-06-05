@@ -212,9 +212,10 @@ namespace BNetInstaller
             //statusLabel.Text = "Аутентификация...";
 
             await app.AgentEndpoint.Get();
-
-            app.GameSessionEndpoint.Model.binary_type = "game";
-            app.GameSessionEndpoint.Model.pid = 3782;
+            //await app.GSEndpoint.Post();
+            //app.GameSessionEndpoint.Model.binary_type = "game";
+            //app.GameSessionEndpoint.Model.pid = 34140;
+            //app.GameSessionEndpoint.Model.pid_path = "D:/Games/Diablo II Resurrected/d2r.exe";
             app.GameSessionEndpoint.Model.uid = uid;
             await app.GameSessionEndpoint.Post();
         }
