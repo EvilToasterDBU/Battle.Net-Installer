@@ -10,7 +10,6 @@ using BNetInstaller.Endpoints;
 using System.Drawing;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using Dark.Net;
-using System.Text.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BNetInstaller
@@ -32,6 +31,7 @@ namespace BNetInstaller
             DarkNet.Instance.EffectiveCurrentProcessThemeIsDarkChanged += (_, isDarkTheme) => RenderTheme(isDarkTheme);
             RenderTheme(DarkNet.Instance.EffectiveCurrentProcessThemeIsDark);
             this.Load += Form1_Load;
+            FormClosing += Form1_FormClosing;
         }
         private void RenderTheme(bool isDarkTheme)
         {
@@ -42,7 +42,7 @@ namespace BNetInstaller
         {
             string repositoryOwner = "EvilToasterDBU";
             string repositoryName = "D4Launcher";
-            string currentVersion = "1.0.1"; // Замените на текущую версию вашего приложения
+            string currentVersion = "1.0.2"; // Замените на текущую версию вашего приложения
             this.Text = repositoryName + " " + currentVersion;
 
 
@@ -85,6 +85,7 @@ namespace BNetInstaller
             string version = await GetVersionFromBuildInfo(url);
 
             checkbox_check_files.CheckedChanged += checkBox3_CheckedChanged; // Добавляем обработчик события
+
             engToolStripMenuItem.Click += engToolStripMenuItem_Click;
             ruToolStripMenuItem.Click += ruToolStripMenuItem_Click;
             CompareLabelsAndSetButtonAvailability();
@@ -99,7 +100,8 @@ namespace BNetInstaller
                 button_play.Enabled = false;
                 checkBox_store_password.Enabled = false;
             }
-
+            checkBox_store_password.CheckedChanged += checkBox_store_password_CheckedChangedAsync;
+            checkBox_store_password.Enabled = true;
         }
 
 
@@ -191,21 +193,23 @@ namespace BNetInstaller
         {
             string currentDirectory = Application.StartupPath;
             string dir = currentDirectory;
-            string pathToExecutable = dir + "Diablo IV.exe";
-            string parameter1 = "-launch";
-            string parameter2 = "";
+            string pathToExecutable = dir + "Diablo IV_beta.exe";
+            string parameter = "";
+            if (ruToolStripMenuItem.Checked) { parameter = "-launch -locale ruru"; }
+            else if (!ruToolStripMenuItem.Checked) { parameter = "-launch -locale enus"; }
             if (checkBox_store_password.Checked)
             {
-                parameter2 = "-sso";
+                pathToExecutable = dir + "Diablo IV.exe";
             }
 
             Process process = new Process();
             process.StartInfo.FileName = pathToExecutable;
-            process.StartInfo.Arguments = parameter1 + " " + parameter2;
+            process.StartInfo.Arguments = parameter;
 
             process.Start();
+            if (checkBox_store_password.Checked) { Application.Exit(); }
             // Завершение выполнения программы
-            Application.Exit();
+            //Application.Exit();
         }
 
         private async void button_update_ClickAsync(object sender, EventArgs e)
@@ -226,11 +230,53 @@ namespace BNetInstaller
         }
 
         // Сохранение состояния checkBox1
-        private void checkBox_store_password_CheckedChanged(object sender, EventArgs e)
+        private async void checkBox_store_password_CheckedChangedAsync(object sender, EventArgs e)
         {
+            string currentDirectory = Application.StartupPath;
+            string dir = currentDirectory;
             Properties.Settings.Default.CheckBox1State = checkBox_store_password.Checked;
+            if (checkBox_store_password.Checked)
+            {
+                button_play.Text = "Играть";
+                checkBox_store_password.Enabled = false;
+                checkbox_check_files.Enabled = true;
+                button_play.Enabled = false;
+                if (File.Exists(dir + ".build.info")) { File.Move(dir + ".build.info", dir + "_beta/.build.info"); }
+                await Task.Delay(250);
+                if (File.Exists(dir + "_orig/.build.info")) { File.Move(dir + "_orig/.build.info", dir + ".build.info"); }
+                await Task.Delay(250);
+                checkBox_store_password.Enabled = true;
+                button_play.Enabled = true;
+            }
+            else if (!checkBox_store_password.Checked)
+            {
+                button_play.Text = "Логин";
+                checkBox_store_password.Enabled = false;
+                button_update.Enabled = false;
+                checkbox_check_files.Enabled = false;
+                button_play.Enabled = false;
+                if (File.Exists(dir + ".build.info")) { File.Move(dir + ".build.info", dir + "_orig/.build.info"); }
+                await Task.Delay(250);
+                if (File.Exists(dir + "_beta/.build.info")) { File.Move(dir + "_beta/.build.info", dir + ".build.info"); }
+                await Task.Delay(250);
+                checkBox_store_password.Enabled = true;
+                button_play.Enabled = true;
+            }
             Properties.Settings.Default.Save();
         }
+
+        private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!checkBox_store_password.Checked)
+            {
+                e.Cancel = true; // Отменяем закрытие формы
+                checkBox_store_password.Checked = true;
+                await Task.Delay(500);
+                Properties.Settings.Default.Save();
+                Close();
+            }
+        }
+
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             CompareLabelsAndSetButtonAvailability();

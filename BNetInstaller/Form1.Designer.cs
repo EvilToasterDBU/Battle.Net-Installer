@@ -65,13 +65,16 @@ namespace BNetInstaller
             // checkBox_store_password
             // 
             checkBox_store_password.AutoSize = true;
+            checkBox_store_password.Checked = true;
+            checkBox_store_password.CheckState = CheckState.Checked;
+            checkBox_store_password.Enabled = false;
             checkBox_store_password.ForeColor = Color.FromArgb(60, 63, 65);
             checkBox_store_password.Location = new Point(10, 66);
             checkBox_store_password.Name = "checkBox_store_password";
             checkBox_store_password.Size = new Size(130, 19);
             checkBox_store_password.TabIndex = 1;
             checkBox_store_password.Text = "Запомнить пароль";
-            checkBox_store_password.CheckedChanged += checkBox_store_password_CheckedChanged;
+            checkBox_store_password.CheckedChanged += checkBox_store_password_CheckedChangedAsync;
             // 
             // button_update
             // 
