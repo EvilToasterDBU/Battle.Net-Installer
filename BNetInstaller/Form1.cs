@@ -42,7 +42,7 @@ namespace BNetInstaller
         {
             string repositoryOwner = "EvilToasterDBU";
             string repositoryName = "D4Launcher";
-            string currentVersion = "1.0.2"; // Замените на текущую версию вашего приложения
+            string currentVersion = "1.0.3"; // Замените на текущую версию вашего приложения
             this.Text = repositoryName + " " + currentVersion;
 
 
@@ -89,7 +89,6 @@ namespace BNetInstaller
             engToolStripMenuItem.Click += engToolStripMenuItem_Click;
             ruToolStripMenuItem.Click += ruToolStripMenuItem_Click;
             CompareLabelsAndSetButtonAvailability();
-            CompareLabelsAndSetButton1Availability();
 
             label_current_version.Text = lastVersion;
             label_actual_version.Text = version;
@@ -101,7 +100,6 @@ namespace BNetInstaller
                 checkBox_store_password.Enabled = false;
             }
             checkBox_store_password.CheckedChanged += checkBox_store_password_CheckedChangedAsync;
-            checkBox_store_password.Enabled = true;
         }
 
 
@@ -147,7 +145,6 @@ namespace BNetInstaller
 
             return version;
         }
-
 
         private string GetLastVersionFromBuildInfo(string filePath)
         {
@@ -287,23 +284,14 @@ namespace BNetInstaller
         {
             if (label_actual_version.Text != label_current_version.Text || checkbox_check_files.Checked)
             {
-                button_update.Enabled = true;
-            }
-            else
-            {
-                button_update.Enabled = false;
-            }
-        }
-        private void CompareLabelsAndSetButton1Availability()
-        {
-            if (label_actual_version.Text != label_current_version.Text || checkbox_check_files.Checked)
-            {
                 button_play.Enabled = false;
-                checkBox_store_password.Enabled = false;
+                button_update.Enabled = true;
+                checkBox_store_password.Enabled=false;
             }
             else
             {
                 button_play.Enabled = true;
+                button_update.Enabled = false;
                 checkBox_store_password.Enabled = true;
             }
         }
@@ -561,7 +549,7 @@ namespace BNetInstaller
                             if (currentVersion.CompareTo(latestVersion) < 0)
                             {
                                 // Вывод текста в statusLabel.Text
-                                statusLabel.Text = "Вышло обновление D4 Launcher " + latestVersion;
+                                statusLabel.Text = "Вышло обновление D4Launcher " + latestVersion;
                             }
                         }
                     }
