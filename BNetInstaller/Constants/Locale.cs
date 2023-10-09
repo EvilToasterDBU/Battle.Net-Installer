@@ -1,6 +1,6 @@
 ﻿namespace BNetInstaller.Constants;
 
-internal enum Locale
+public enum Locale
 {
     arSA,
     enSA,

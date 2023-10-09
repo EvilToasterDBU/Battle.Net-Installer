@@ -20,15 +20,15 @@ internal class AgentApp : IDisposable
     public readonly GameEndpoint GameEndpoint;
     public readonly VersionEndpoint VersionEndpoint;
 
-    private readonly string AgentPath;
-    private readonly int Port = 5050;
+    private readonly string _agentPath;
+    private readonly int _port = 5050;
 
-    private Process Process;
-    private Requester Requester;
+    private Process _process;
+    private Requester _requester;
 
     public AgentApp()
     {
-        AgentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Battle.net", "Agent", "Agent.exe");
+        _agentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Battle.net", "Agent", "Agent.exe");
 
         if (!StartProcess())
         {
@@ -36,17 +36,17 @@ internal class AgentApp : IDisposable
             Environment.Exit(0);
         }
 
-        AgentEndpoint = new(Requester);
-        InstallEndpoint = new(Requester);
-        UpdateEndpoint = new(Requester);
-        RepairEndpoint = new(Requester);
-        GameEndpoint = new(Requester);
-        VersionEndpoint = new(Requester);
+        AgentEndpoint = new(_requester);
+        InstallEndpoint = new(_requester);
+        UpdateEndpoint = new(_requester);
+        RepairEndpoint = new(_requester);
+        GameEndpoint = new(_requester);
+        VersionEndpoint = new(_requester);
     }
 
     private bool StartProcess()
     {
-        if (!File.Exists(AgentPath))
+        if (!File.Exists(_agentPath))
         {
             Console.WriteLine("Unable to find Agent.exe.");
             return false;
@@ -54,8 +54,8 @@ internal class AgentApp : IDisposable
 
         try
         {
-            Process = Process.Start(AgentPath, $"--port={Port}");
-            Requester = new Requester(Port);
+            _process = Process.Start(_agentPath, $"--port={_port}");
+            _requester = new Requester(_port);
             return true;
         }
         catch (Win32Exception)
@@ -67,10 +67,10 @@ internal class AgentApp : IDisposable
 
     public void Dispose()
     {
-        if (Process?.HasExited == false)
-            Process.Kill();
+        if (_process?.HasExited == false)
+            _process.Kill();
 
-        Requester?.Dispose();
-        Process?.Dispose();
+        _requester?.Dispose();
+        _process?.Dispose();
     }
 }

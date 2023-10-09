@@ -5,17 +5,11 @@ using Newtonsoft.Json.Linq;
 
 namespace BNetInstaller.Endpoints;
 
-internal abstract class BaseEndpoint
+public abstract class BaseEndpoint(string endpoint, Requester requester)
 {
-    public string Endpoint { get; }
+    public string Endpoint { get; } = endpoint;
 
-    protected Requester Requester { get; }
-
-    protected BaseEndpoint(string endpoint, Requester requester)
-    {
-        Endpoint = endpoint;
-        Requester = requester;
-    }
+    protected Requester Requester { get; } = requester;
 
     protected async Task<JToken> Deserialize(HttpResponseMessage response)
     {
@@ -27,8 +21,7 @@ internal abstract class BaseEndpoint
 
     protected virtual void ValidateResponse(JToken response, string content)
     {
-        var errorCode = response.Value<float?>("error");
-        if (errorCode > 0)
-            throw new Exception($"Agent Error: {errorCode}", new(content));
+        float? errorCode = response.Value<float?>("error");
+        if (errorCode > 0) { throw new Exception($"Agent Error: {errorCode}", new(content)); }
     }
 }
