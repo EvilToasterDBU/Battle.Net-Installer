@@ -6,19 +6,14 @@ using Newtonsoft.Json.Linq;
 
 namespace BNetInstaller.Endpoints.Install;
 
-internal class InstallEndpoint : BaseEndpoint
+public class InstallEndpoint(Requester requester) : BaseEndpoint("install", requester)
 {
-    public InstallModel Model { get; }
+    public InstallModel Model { get; } = new();
     public ProductEndpoint Product { get; private set; }
-
-    public InstallEndpoint(Requester requester) : base("install", requester)
-    {
-        Model = new();
-    }
 
     public async Task<JToken> Post()
     {
-        using var response = await Requester.SendAsync(Endpoint, HttpVerb.POST, Model);
+        using var response = await Requester.SendAsync(Endpoint, HttpVerb.Post, Model);
         var content = await Deserialize(response);
         Product = ProductEndpoint.CreateFromResponse(content, Requester);
         return content;
@@ -26,7 +21,7 @@ internal class InstallEndpoint : BaseEndpoint
 
     protected override void ValidateResponse(JToken response, string content)
     {
-        var agentError = response.Value<float?>("error");
+        float? agentError = response.Value<float?>("error");
 
         if (agentError > 0)
         {

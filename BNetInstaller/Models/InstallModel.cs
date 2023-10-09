@@ -1,6 +1,6 @@
 ﻿namespace BNetInstaller.Models;
 
-internal class InstallModel : ProductPriorityModel
+public class InstallModel : ProductPriorityModel
 {
     public string[] InstructionsDataset { get; set; }
     public string InstructionsPatchUrl { get; set; }

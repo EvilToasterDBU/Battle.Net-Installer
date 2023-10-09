@@ -5,13 +5,14 @@ using Dark.Net;
 
 namespace BNetInstaller
 {
-    internal static class ProgramLauncher
+    public static class ProgramLauncher
     {
-        static Mutex mutex = new Mutex(true, "D4Launcher");
+        private static readonly Mutex Mutex = new(true, "D4Launcher");
+
         [STAThread]
         static void Main()
         {
-            if (mutex.WaitOne(TimeSpan.Zero, true))
+            if (Mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -24,13 +25,9 @@ namespace BNetInstaller
                 darkNet.UserDefaultAppThemeIsDarkChanged += (_, isSystemDarkTheme) => Console.WriteLine($"System theme is {(isSystemDarkTheme ? "Dark" : "Light")}");
                 darkNet.UserTaskbarThemeIsDarkChanged += (_, isTaskbarDarkTheme) => Console.WriteLine($"Taskbar theme is {(isTaskbarDarkTheme ? "Dark" : "Light")}");
                 Application.Run(mainForm);
-                mutex.ReleaseMutex();
+                Mutex.ReleaseMutex();
             }
-            else
-            {
-                MessageBox.Show("D4Launcher уже запущен");
-            }
-
+            else { MessageBox.Show("D4Launcher уже запущен"); }
         }
     }
 }

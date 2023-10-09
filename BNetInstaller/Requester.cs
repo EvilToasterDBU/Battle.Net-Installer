@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BNetInstaller.Constants;
@@ -8,7 +9,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace BNetInstaller;
 
-internal class Requester : IDisposable
+public class Requester : IDisposable
 {
     public string BaseAddress { get; }
 
@@ -24,53 +25,47 @@ internal class Requester : IDisposable
 
         _serializerSettings = new()
         {
-            ContractResolver = new DefaultContractResolver()
+            ContractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new SnakeCaseNamingStrategy()
             }
         };
     }
 
-    public void SetAuthorization(string authorization)
-    {
-        _client.DefaultRequestHeaders.Add("Authorization", authorization);
-    }
+    public void SetAuthorization(string authorization) => _client.DefaultRequestHeaders.Add("Authorization", authorization);
 
     public async Task<HttpResponseMessage> SendAsync(string endpoint, HttpVerb verb, string content = null)
     {
-        var url = string.Format(BaseAddress, endpoint);
-        var request = new HttpRequestMessage(new(verb.ToString()), url);
+        string url = string.Format(BaseAddress, endpoint);
+        HttpRequestMessage request = new (new HttpMethod(verb.ToString()), url);
 
-        if (verb != HttpVerb.GET && !string.IsNullOrEmpty(content))
-            request.Content = new StringContent(content);
+        if (verb != HttpVerb.Get && !string.IsNullOrEmpty(content))
+        { request.Content = new StringContent(content); }
 
-        var response = await _client.SendAsync(request);
-        if (!response.IsSuccessStatusCode)
-            await HandleRequestFailure(response);
+
+        HttpResponseMessage response = await _client.SendAsync(request);
+        if (!response.IsSuccessStatusCode) { await HandleRequestFailure(response); }
 
         return response;
     }
 
     public async Task<HttpResponseMessage> SendAsync<T>(string endpoint, HttpVerb verb, T payload = null) where T : class
     {
-       
-            var content = payload != null ?
-                JsonConvert.SerializeObject(payload, _serializerSettings) :
-                null;
 
-            return await SendAsync(endpoint, verb, content);
+        string content = payload != null ?
+        JsonConvert.SerializeObject(payload, _serializerSettings) :
+        null;
+
+        return await SendAsync(endpoint, verb, content);
     }
 
     private static async Task HandleRequestFailure(HttpResponseMessage response)
     {
-        var uri = response.RequestMessage.RequestUri.AbsolutePath;
-        var statusCode = response.StatusCode;
-        var content = await response.Content.ReadAsStringAsync();
+        string uri = response.RequestMessage?.RequestUri?.AbsolutePath ?? throw new Exception("Empty Uri");
+        HttpStatusCode statusCode = response.StatusCode;
+        string content = await response.Content.ReadAsStringAsync();
         Debug.WriteLine($"{(int)statusCode} {statusCode}: {uri} {content}");
     }
 
-    public void Dispose()
-    {
-        _client.Dispose();
-    }
+    public void Dispose() => _client.Dispose();
 }

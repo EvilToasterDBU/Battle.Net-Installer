@@ -4,15 +4,11 @@ using Newtonsoft.Json.Linq;
 
 namespace BNetInstaller.Endpoints.Game;
 
-internal class GameEndpoint : BaseEndpoint
+public class GameEndpoint(Requester requester) : BaseEndpoint("game", requester)
 {
-    public GameEndpoint(Requester requester) : base("game", requester)
-    {
-    }
-
     public async Task<JToken> Get(string uid)
     {
-        using var response = await Requester.SendAsync(Endpoint + "/" + uid, HttpVerb.GET);
+        using var response = await Requester.SendAsync(Endpoint + "/" + uid, HttpVerb.Get);
         return await Deserialize(response);
     }
 }
