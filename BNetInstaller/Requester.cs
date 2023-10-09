@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BNetInstaller.Constants;
@@ -60,9 +61,9 @@ public class Requester : IDisposable
 
     private static async Task HandleRequestFailure(HttpResponseMessage response)
     {
-        var uri = response.RequestMessage?.RequestUri?.AbsolutePath ?? throw new Exception("Empty Uri");
-        var statusCode = response.StatusCode;
-        var content = await response.Content.ReadAsStringAsync();
+        string uri = response.RequestMessage?.RequestUri?.AbsolutePath ?? throw new Exception("Empty Uri");
+        HttpStatusCode statusCode = response.StatusCode;
+        string content = await response.Content.ReadAsStringAsync();
         Debug.WriteLine($"{(int)statusCode} {statusCode}: {uri} {content}");
     }
 
